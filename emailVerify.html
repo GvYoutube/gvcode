@@ -109,10 +109,10 @@
       validator.type = "email";
       validator.value = email || "";
 
-      function showError(message) {
+      function showError(message, canRetry = false) {
         status.textContent = message;
         status.classList.add("error");
-        retryButton.hidden = false;
+        retryButton.hidden = !canRetry;
         retryButton.disabled = false;
       }
 
@@ -135,7 +135,7 @@
 
           status.textContent = "Your signup has been received. A thank-you email will be sent if the automation is active.";
         } catch {
-          showError("We couldn't send the signup confirmation. Please check your connection and try again.");
+          showError("We couldn't send the signup confirmation. Please check your connection and try again.", true);
         }
       }
 
