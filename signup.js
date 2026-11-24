@@ -1,7 +1,7 @@
 const form = document.getElementById("signup-form");
 const submitButton = document.getElementById("submit-button");
 const status = document.getElementById("status");
-const emailFunctionUrl = "https://gvcode.netlify.app/netlify/functions/send-thank-you";
+const emailFunctionUrl = "https://gvcode.netlify.app/.netlify/functions/send-thank-you";
 
 let signupSubmitted = false;
 let submittedEmail = "";
