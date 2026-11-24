@@ -134,46 +134,6 @@
       <a class="back-link" href="index.html">Back to GvCode</a>
     </main>
 
-    <script>
-      const form = document.getElementById("signup-form");
-      const submitButton = document.getElementById("submit-button");
-      const status = document.getElementById("status");
-
-      form.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        if (!form.reportValidity()) return;
-
-        submitButton.disabled = true;
-        status.classList.remove("error");
-        status.innerHTML = '<span class="spinner" aria-hidden="true"></span>Submitting your signup...';
-
-        try {
-          const response = await fetch(form.action, {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(Object.fromEntries(new FormData(form).entries())),
-          });
-          const result = await response.json().catch(() => null);
-
-          if (!response.ok) {
-            const details = Array.isArray(result?.errors)
-              ? result.errors.map((item) => item.message).filter(Boolean).join(" ")
-              : result?.error;
-            throw new Error(`HTTP ${response.status}${details ? `: ${details}` : ""}`);
-          }
-
-          const email = new FormData(form).get("email");
-          window.location.href = `emailVerify.html?email=${encodeURIComponent(email)}`;
-        } catch (error) {
-          console.error("Formspree signup POST failed:", error);
-          status.textContent = `We couldn't submit your signup. ${error instanceof Error ? error.message : "Please check your connection and try again."}`;
-          status.classList.add("error");
-          submitButton.disabled = false;
-        }
-      });
-    </script>
+    <script src="signup.js" defer></script>
   </body>
 </html>
