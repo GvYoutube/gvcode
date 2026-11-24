@@ -35,7 +35,7 @@ function event({ method = "POST", origin = "https://example.github.io", body } =
 
 test("sends the configured template to the submitted email", async () => {
   configure();
-  Math.random = () => 0;
+  Math.random = () => 0.999999;
   let request;
   global.fetch = async (url, options) => {
     request = { url, options };
@@ -52,7 +52,7 @@ test("sends the configured template to the submitted email", async () => {
     to: ["person@example.com"],
     template: {
       id: "test-template-id",
-      variables: { FUN_FACT: "<em>Octopuses have three hearts.</em>" },
+      variables: { FUN_FACT: "<em>The Earth's atmosphere makes the sky look blue.</em>" },
     },
   });
 });
