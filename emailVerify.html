@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signup received | GvCode</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 1rem;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+        background: #f4f4f5;
+        color: #18181b;
+      }
+
+      .card {
+        width: min(100%, 28rem);
+        padding: 2rem;
+        box-sizing: border-box;
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        text-align: center;
+      }
+
+      h1 { margin-top: 0; }
+
+      #email-address {
+        overflow-wrap: anywhere;
+        font-weight: 600;
+      }
+
+      .status {
+        min-height: 1.5rem;
+        color: #52525b;
+        line-height: 1.5;
+      }
+
+      .status.error { color: #b91c1c; }
+
+      button,
+      a {
+        font: inherit;
+      }
+
+      button {
+        min-height: 2.8rem;
+        margin-top: 0.5rem;
+        padding: 0.6rem 1rem;
+        border: 0;
+        border-radius: 6px;
+        background: #2563eb;
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      button:focus-visible,
+      a:focus-visible {
+        outline: 3px solid #2563eb;
+        outline-offset: 2px;
+      }
+
+      button:disabled { cursor: wait; opacity: 0.7; }
+      a { color: #2563eb; }
+
+      .spinner {
+        display: inline-block;
+        width: 1rem;
+        height: 1rem;
+        margin-right: 0.5rem;
+        border: 2px solid currentColor;
+        border-right-color: transparent;
+        border-radius: 50%;
+        vertical-align: -0.2rem;
+        animation: spin 0.8s linear infinite;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .spinner { animation-duration: 2s; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <h1>Thanks for signing up</h1>
+      <p id="status" class="status" role="status" aria-live="polite">
+        <span class="spinner" aria-hidden="true"></span>Sending your signup confirmation...
+      </p>
+      <p id="email-address"></p>
+      <button id="retry-button" type="button" hidden>Try again</button>
+      <p><a href="index.html">Back to GvCode</a></p>
+    </main>
+
+    <script>
+      const status = document.getElementById("status");
+      const emailAddress = document.getElementById("email-address");
+      const retryButton = document.getElementById("retry-button");
+      const email = new URLSearchParams(window.location.search).get("email")?.trim();
+      const validator = document.createElement("input");
+      validator.type = "email";
+      validator.value = email || "";
+
+      function showError(message) {
+        status.textContent = message;
+        status.classList.add("error");
+        retryButton.hidden = false;
+        retryButton.disabled = false;
+      }
+
+      async function sendSignupConfirmation() {
+        retryButton.disabled = true;
+        retryButton.hidden = true;
+        status.classList.remove("error");
+        status.innerHTML = '<span class="spinner" aria-hidden="true"></span>Sending your signup confirmation...';
+
+        try {
+          const formData = new FormData();
+          formData.append("email", email);
+          const response = await fetch("https://formspree.io/f/xrpqornq", {
+            method: "POST",
+            headers: { Accept: "application/json" },
+            body: formData,
+          });
+
+          if (!response.ok) throw new Error("Email submission failed");
+
+          status.textContent = "Your signup has been received. A thank-you email will be sent if the automation is active.";
+        } catch {
+          showError("We couldn't send the signup confirmation. Please check your connection and try again.");
+        }
+      }
+
+      if (!email || email.length > 254 || !validator.checkValidity()) {
+        showError("A valid email address was not provided. Please return to the signup page and try again.");
+      } else {
+        emailAddress.textContent = email;
+        sendSignupConfirmation();
+      }
+
+      retryButton.addEventListener("click", sendSignupConfirmation);
+    </script>
+  </body>
+</html>
