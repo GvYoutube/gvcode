@@ -8,6 +8,7 @@ const originalEnv = {
   RESEND_TEMPLATE_ID: process.env.RESEND_TEMPLATE_ID,
 };
 const originalFetch = global.fetch;
+const originalRandom = Math.random;
 
 afterEach(() => {
   for (const [key, value] of Object.entries(originalEnv)) {
@@ -15,6 +16,7 @@ afterEach(() => {
     else process.env[key] = value;
   }
   global.fetch = originalFetch;
+  Math.random = originalRandom;
 });
 
 function configure() {
@@ -33,6 +35,7 @@ function event({ method = "POST", origin = "https://example.github.io", body } =
 
 test("sends the configured template to the submitted email", async () => {
   configure();
+  Math.random = () => 0;
   let request;
   global.fetch = async (url, options) => {
     request = { url, options };
@@ -47,7 +50,10 @@ test("sends the configured template to the submitted email", async () => {
   assert.deepEqual(JSON.parse(request.options.body), {
     from: "gvcode@gvyoutube.net",
     to: ["person@example.com"],
-    template: { id: "test-template-id" },
+    template: {
+      id: "test-template-id",
+      variables: { FUN_FACT: "<em>Octopuses have three hearts.</em>" },
+    },
   });
 });
 

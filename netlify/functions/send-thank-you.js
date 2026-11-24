@@ -1,4 +1,9 @@
 const RESEND_EMAILS_URL = "https://api.resend.com/emails";
+const FUN_FACTS = [
+  "Octopuses have three hearts.",
+  "A day on Venus is longer than its year.",
+  "Bananas are berries, but strawberries are not.",
+];
 
 function response(statusCode, body, origin) {
   return {
@@ -58,6 +63,7 @@ exports.handler = async (event) => {
 
   let resendResponse;
   try {
+    const funFact = FUN_FACTS[Math.floor(Math.random() * FUN_FACTS.length)];
     resendResponse = await fetch(RESEND_EMAILS_URL, {
       method: "POST",
       headers: {
@@ -67,7 +73,10 @@ exports.handler = async (event) => {
       body: JSON.stringify({
         from: "gvcode@gvyoutube.net",
         to: [email],
-        template: { id: process.env.RESEND_TEMPLATE_ID },
+        template: {
+          id: process.env.RESEND_TEMPLATE_ID,
+          variables: { FUN_FACT: `<em>${funFact}</em>` },
+        },
       }),
     });
   } catch (error) {
