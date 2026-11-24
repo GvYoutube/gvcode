@@ -9,18 +9,20 @@ const FUN_FACTS = [
   "A bolt of lightning can be hotter than the Sun's surface.",
   "Sharks existed before trees.",
   "Saturn is less dense than water.",
-  "The Eiffel Tower can grow taller in warm weather.",
+  "The Eiffel Tower can grow taller in warm weather. This is because the iron undergoes <a href=\"https://google.com/search?q=thermal+expansion\">thermal expansion</a>.",
   "Sea otters sometimes hold paws while they sleep.",
   "Flamingos get their pink color from pigments in their food.",
   "The Moon moves away from Earth by about 3.8 centimeters each year.",
   "Dolphins sleep with one half of their brain at a time.",
   "Greenland sharks can live for centuries.",
-  "Koala fingerprints can look remarkably like human fingerprints.",
+  "Koala fingerprints can look remarkably like human fingerprints. We wouldn't reccomened using it for your phone, though...",
   "Axolotls can regenerate lost limbs.",
   "Peanuts are legumes, not true nuts.",
   "An adult cat has 32 muscles in each ear.",
   "Some sea stars can regrow lost arms.",
   "The Earth's atmosphere makes the sky look blue.",
+  "You are alive.",
+  "There might be someone behind you. What? No, this isn't creepy! There might be someone! We don't know, though"
 ];
 
 function response(statusCode, body, origin) {
