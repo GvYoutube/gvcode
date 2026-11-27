@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GvCode Arcade</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      color: #fff;
+      font-family: system-ui, sans-serif;
+      background:
+        radial-gradient(1px 1px at 12% 18%, #fff 99%, transparent),
+        radial-gradient(1px 1px at 78% 24%, #fff 99%, transparent),
+        radial-gradient(2px 2px at 35% 72%, #d9e7ff 99%, transparent),
+        radial-gradient(1px 1px at 89% 83%, #fff 99%, transparent),
+        radial-gradient(1px 1px at 58% 46%, #fff 99%, transparent),
+        radial-gradient(ellipse at 50% 110%, #29235c 0%, #11132f 45%, #050611 100%);
+      background-size: 250px 250px, 330px 330px, 420px 420px,
+                       290px 290px, 370px 370px, cover;
+    }
+
+    .screen {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      transition: opacity 900ms ease, visibility 900ms ease;
+    }
+
+    .screen.is-hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    #begin {
+      padding: 0.85rem 2.4rem;
+      border: 1px solid #dce5ff;
+      border-radius: 999px;
+      color: #fff;
+      background: rgb(255 255 255 / 10%);
+      font: inherit;
+      font-size: 1.15rem;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: background 200ms ease, transform 200ms ease;
+    }
+
+    #begin:hover {
+      background: rgb(255 255 255 / 20%);
+      transform: scale(1.05);
+    }
+
+    #begin:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 5px;
+    }
+
+    #content {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    #content.is-visible {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .content-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 7vw, 4.5rem);
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      text-shadow: 0 0 24px rgb(165 190 255 / 60%);
+    }
+
+    .space-image {
+      display: block;
+      width: min(72vw, 520px);
+      max-height: 65vh;
+      object-fit: contain;
+      animation: bob 4s ease-in-out infinite;
+      filter: drop-shadow(0 0 28px rgb(140 170 255 / 35%));
+    }
+
+    @keyframes bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-18px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section id="welcome" class="screen" aria-label="Welcome">
+      <button id="begin" type="button">Begin</button>
+    </section>
+
+    <section id="content" class="screen is-hidden" aria-label="Coming soon" aria-hidden="true">
+      <div class="content-inner">
+        <h1>coming soon</h1>
+        <img
+          class="space-image"
+          src="graisonIsInSpaceShesInSpace.png"
+          alt="Graison is in space. She's in space!"
+        >
+      </div>
+    </section>
+  </main>
+
+  <audio id="background-audio" src="glassbutton.wav" loop preload="auto"></audio>
+
+  <script>
+    const beginButton = document.querySelector("#begin");
+    const welcomeScreen = document.querySelector("#welcome");
+    const contentScreen = document.querySelector("#content");
+    const backgroundAudio = document.querySelector("#background-audio");
+
+    beginButton.addEventListener("click", async () => {
+      welcomeScreen.classList.add("is-hidden");
+      contentScreen.classList.remove("is-hidden");
+      contentScreen.classList.add("is-visible");
+      contentScreen.setAttribute("aria-hidden", "false");
+
+      try {
+        await backgroundAudio.play();
+      } catch (error) {
+        console.error("Background audio could not be played:", error);
+      }
+    }, { once: true });
+  </script>
+</body>
+</html>
